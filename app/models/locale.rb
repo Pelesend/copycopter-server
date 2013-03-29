@@ -5,8 +5,9 @@ class Locale < ActiveRecord::Base
   validates_presence_of :key, :project_id
   validates_uniqueness_of :key, :scope => :project_id
 
+  # https://github.com/copycopter/copycopter-server/issues/64
   def self.enabled_in_order
-    enabled.order 'key ASC'
+    enabled.order(:key)
   end
 
   def self.first_enabled
