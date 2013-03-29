@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120315145922) do
+ActiveRecord::Schema.define(:version => 20130329131800) do
 
   create_table "blurbs", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -74,10 +74,10 @@ ActiveRecord::Schema.define(:version => 20120315145922) do
   add_index "projects", ["archived"], :name => "index_projects_on_archived"
 
   create_table "text_caches", :force => true do |t|
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
-    t.text     "data"
-    t.text     "hierarchichal_data"
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+    t.text     "data",               :limit => 4294967295
+    t.text     "hierarchichal_data", :limit => 4294967295
   end
 
   create_table "versions", :force => true do |t|
