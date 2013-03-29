@@ -1,0 +1,20 @@
+development: &default
+  adapter: sqlite3
+  database: db/development.sqlite3
+  pool: 5
+  timeout: 5000
+
+test: &test
+  <<: *default
+  database: db/test.sqlite3
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: true
+  database: copycptprod1
+  host: db1.pelesend.com
+  pool: 5
+  username: pilot01
+  password: Helic0pt3r!
+  timeout: 5000
