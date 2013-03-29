@@ -24,11 +24,14 @@ group :development, :test do
   gem 'launchy', '2.0.5'
   gem 'rspec-rails', '2.8.1'
   gem 'spork', '0.9.0'
+  gem 'capistrano'
+  gem 'capistrano-ext'
+  gem 'rvm-capistrano'
 end
 
 group :test do
   gem 'bourne', '1.1.1'
-  gem 'capybara-webkit'
+  gem 'capybara-webkit', '0.14.2'
   gem 'cucumber-rails', '1.3.0', :require => false
   gem 'database_cleaner', '0.7.1'
   gem 'factory_girl_rails', '1.7.0'
