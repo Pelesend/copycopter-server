@@ -37,9 +37,18 @@ class Localization < ActiveRecord::Base
     versions.last
   end
 
+  #def self.latest_version
+  #  #PG
+  #  <<-eosql
+  #    SELECT DISTINCT ON (localization_id) localization_id, id, content
+  #      FROM versions ORDER BY localization_id DESC, id DESC
+  #  eosql
+  #end
+
   def self.latest_version
+    #MYSQL
     <<-eosql
-      SELECT DISTINCT ON (localization_id) localization_id, id, content
+      SELECT DISTINCT localization_id, id, content
         FROM versions ORDER BY localization_id DESC, id DESC
     eosql
   end
@@ -52,19 +61,37 @@ class Localization < ActiveRecord::Base
     joins(:blurb).order 'blurbs.key'
   end
 
+  #def self.publish
+  #  ActiveRecord::Base.connection.execute <<-eosql
+  #    UPDATE localizations
+  #      SET published_version_id = latest_version.id,
+  #      published_content = latest_version.content,
+  #      updated_at = '#{connection.quoted_date(Time.now)}'
+  #    FROM (
+  #        #{latest_version}
+  #      ) AS latest_version
+  #    WHERE latest_version.localization_id = localizations.id
+  #    AND localizations.id IN (#{scoped.map(&:id).join(',')});
+  #  eosql
+  #end
+
+
+  # https://github.com/copycopter/copycopter-server/issues/64#issuecomment-5836709
   def self.publish
+    #MYSQL
     ActiveRecord::Base.connection.execute <<-eosql
       UPDATE localizations
-        SET published_version_id = latest_version.id,
-        published_content = latest_version.content,
-        updated_at = '#{connection.quoted_date(Time.now)}'
-      FROM (
-          #{latest_version}
-        ) AS latest_version
-      WHERE latest_version.localization_id = localizations.id
-      AND localizations.id IN (#{scoped.map(&:id).join(',')});
+      INNER JOIN (
+      #{latest_version}
+      ) latest_version
+      ON localizations.id = latest_version.localization_id
+      SET published_version_id = latest_version.id,
+      published_content = latest_version.content,
+      updated_at = '#{connection.quoted_date(Time.now)}'
+      WHERE localizations.id IN (#{scoped.map(&:id).join(',')});
     eosql
   end
+
 
   def publish
     self.class.where(:id => self.id).publish
