@@ -1,12 +1,14 @@
 require 'rvm/capistrano'
 require 'bundler/capistrano'
-require 'capistrano/ext/multistage'
 
 set :application, 'PelesendCopyCopter'
 set :repository,  'git://github.com/Pelesend/copycopter-server.git'
 set :deploy_to, '/home/copycpt1/application'
+
 set :stages, %w(production)
 set :default_stage, 'production'
+require 'capistrano/ext/multistage'
+
 set :scm, :git
 set :rvm_ruby_string, '1.9.3-head@global'
 set :rvm_type, :system
